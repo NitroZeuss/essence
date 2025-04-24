@@ -12,9 +12,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { registerUser } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
-import Cropper from "react-cropper"
-import "cropperjs/dist/cropper.css"
-import "../node_modules/cropperjs/dist/cropper.css";
 
 
 
