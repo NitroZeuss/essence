@@ -6,11 +6,11 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { RelatedArticles } from "@/components/related-articles"
 
-type Props = {
+interface PageProps {
   params: { id: string }
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   try {
     const article = await fetchArticleById(params.id)
     return {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function ArticlePage({ params }: Props) {
+export default async function ArticlePage({ params }: PageProps) {
   const articleId = params.id
 
   try {
@@ -33,13 +33,10 @@ export default async function ArticlePage({ params }: Props) {
     const categories = await fetchCategories()
     const allComments = await fetchComments()
 
-    // Filter comments for this article
     const articleComments = allComments.filter((comment) => comment.articleId === articleId)
 
-    // Find category name
     const category = categories.find((cat) => cat.id === article.categoryId)
 
-    // Determine image URL
     const imageUrl = article.image
       ? `https://res.cloudinary.com/dxf2c3jnr/${article.image}`
       : `https://source.unsplash.com/random/1200x600/?abstract,minimal`
@@ -52,8 +49,12 @@ export default async function ArticlePage({ params }: Props) {
           </div>
           <div className="container mx-auto px-4 h-full flex items-end pb-12 relative z-10">
             <div className="max-w-3xl">
-              <div className="text-sm font-medium text-white/80 mb-2">{category?.name || "Uncategorized"}</div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">{article.title}</h1>
+              <div className="text-sm font-medium text-white/80 mb-2">
+                {category?.name || "Uncategorized"}
+              </div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                {article.title}
+              </h1>
               <div className="flex items-center gap-4 text-white/80">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-medium">
@@ -70,7 +71,10 @@ export default async function ArticlePage({ params }: Props) {
 
         <div className="container mx-auto px-4 py-12">
           <div className="max-w-3xl mx-auto">
-            <div className="article-content mb-12" dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div
+              className="article-content mb-12"
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
 
             <ArticleActions articleId={articleId} />
 
