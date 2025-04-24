@@ -14,6 +14,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2 } from "lucide-react"
 import Cropper from "react-cropper"
 import "cropperjs/dist/cropper.css"
+import "../node_modules/cropperjs/dist/cropper.css";
+
+
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
