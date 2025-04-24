@@ -6,11 +6,8 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { RelatedArticles } from "@/components/related-articles"
 
-interface PageProps {
-  params: { id: string }
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// ✅ Keep it exactly like this
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
     const article = await fetchArticleById(params.id)
     return {
@@ -25,7 +22,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function ArticlePage({ params }: PageProps) {
+// ✅ Same here, no custom PageProps type at all
+export default async function ArticlePage({ params }: { params: { id: string } }) {
   const articleId = params.id
 
   try {
@@ -44,7 +42,10 @@ export default async function ArticlePage({ params }: PageProps) {
     return (
       <div className="bg-background">
         <div className="w-full h-[50vh] relative overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}>
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${imageUrl})` }}
+          >
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
           </div>
           <div className="container mx-auto px-4 h-full flex items-end pb-12 relative z-10">
@@ -75,9 +76,7 @@ export default async function ArticlePage({ params }: PageProps) {
               className="article-content mb-12"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
-
             <ArticleActions articleId={articleId} />
-
             <CommentSection articleId={articleId} initialComments={articleComments} />
           </div>
         </div>
@@ -85,7 +84,10 @@ export default async function ArticlePage({ params }: PageProps) {
         <div className="bg-muted/30 py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-8">More Articles</h2>
-            <RelatedArticles currentArticleId={articleId} categoryId={article.categoryId} />
+            <RelatedArticles
+              currentArticleId={articleId}
+              categoryId={article.categoryId}
+            />
           </div>
         </div>
       </div>
