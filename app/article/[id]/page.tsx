@@ -6,24 +6,18 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { RelatedArticles } from "@/components/related-articles"
 
-// ✅ Keep it exactly like this
+// 🔥 Do NOT import any `PageProps` from somewhere else
+// 👇 Use inline typing
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  try {
-    const article = await fetchArticleById(params.id)
-    return {
-      title: `${article.title} | Essence`,
-      description: article.content.substring(0, 160).replace(/<[^>]*>/g, ""),
-    }
-  } catch (error) {
-    return {
-      title: "Article | Essence",
-      description: "Read our latest articles on Essence",
-    }
+  const article = await fetchArticleById(params.id)
+  return {
+    title: `${article.title} | Essence`,
+    description: article.content.substring(0, 160).replace(/<[^>]*>/g, ""),
   }
 }
 
-// ✅ Same here, no custom PageProps type at all
-export default async function ArticlePage({ params }: { params: { id: string } }) {
+// 👇 This also must match exactly — no `PageProps` type
+export default async function Page({ params }: { params: { id: string } }) {
   const articleId = params.id
 
   try {
@@ -32,7 +26,6 @@ export default async function ArticlePage({ params }: { params: { id: string } }
     const allComments = await fetchComments()
 
     const articleComments = allComments.filter((comment) => comment.articleId === articleId)
-
     const category = categories.find((cat) => cat.id === article.categoryId)
 
     const imageUrl = article.image
